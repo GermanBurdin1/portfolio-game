@@ -2,7 +2,6 @@
   position: relative;
   width: 600px;
   height: 600px;
-  border: 1px solid black;
   margin: 20px auto;
 }
 
@@ -19,6 +18,11 @@
   background-color: gold;
   position: absolute;
   border-radius: 50%;
+}
+
+.wall {
+  position: absolute;
+  background-color: black;
 }
 
 .projects-list {

@@ -2,33 +2,55 @@ import React, { useState, useEffect } from 'react';
 import './Game.css';
 
 const Game = ({ projects }) => {
-  const [characterPosition, setCharacterPosition] = useState({ top: 0, left: 0 });
+  const [characterPosition, setCharacterPosition] = useState({ top: 60, left: 20 });
   const [coinPositions, setCoinPositions] = useState([
-    { top: 100, left: 100 },
-    { top: 200, left: 200 },
-    { top: 300, left: 300 },
-    { top: 400, left: 400 },
-    { top: 500, left: 500 },
+    { top: 80, left: 150 },
+    { top: 220, left: 90 },
+    { top: 350, left: 270 },
+    { top: 470, left: 90 },
+    { top: 590, left: 270 },
   ]);
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState(null);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState(null);
 
+  const mazeWalls = [
+    { top: 50, left: 0, width: 600, height: 10 },
+    { top: 50, left: 0, width: 10, height: 600 },
+    { top: 650, left: 0, width: 600, height: 10 },
+    { top: 50, left: 590, width: 10, height: 600 },
+    { top: 100, left: 50, width: 400, height: 10 },
+    { top: 100, left: 50, width: 10, height: 150 },
+    { top: 200, left: 50, width: 350, height: 10 },
+    { top: 200, left: 440, width: 10, height: 90 },
+    { top: 290, left: 150, width: 290, height: 10 },
+    { top: 400, left: 50, width: 290, height: 10 },
+    { top: 400, left: 440, width: 10, height: 90 },
+    { top: 490, left: 150, width: 290, height: 10 },
+    { top: 600, left: 50, width: 400, height: 10 },
+  ];
+
   const handleKeyPress = (event) => {
     const { top, left } = characterPosition;
+
+    const moveCharacter = (newTop, newLeft) => {
+      if (!isCollidingWithWalls(newTop, newLeft)) {
+        setCharacterPosition({ top: newTop, left: newLeft });
+      }
+    };
 
     if (hoveredProjectIndex === null) {
       switch (event.key) {
         case 'ArrowUp':
-          setCharacterPosition({ top: Math.max(top - 10, 0), left });
+          moveCharacter(top - 10, left);
           break;
         case 'ArrowDown':
-          setCharacterPosition({ top: Math.min(top + 10, 590), left });
+          moveCharacter(top + 10, left);
           break;
         case 'ArrowLeft':
-          setCharacterPosition({ top, left: Math.max(left - 10, 0) });
+          moveCharacter(top, left - 10);
           break;
         case 'ArrowRight':
-          setCharacterPosition({ top, left: Math.min(left + 10, 590) });
+          moveCharacter(top, left + 10);
           break;
         default:
           break;
@@ -59,6 +81,18 @@ const Game = ({ projects }) => {
           break;
       }
     }
+  };
+
+  const isCollidingWithWalls = (newTop, newLeft) => {
+    const character = { top: newTop, left: newLeft, width: 20, height: 20 };
+    return mazeWalls.some((wall) => {
+      return !(
+        character.top + character.height <= wall.top ||
+        character.top >= wall.top + wall.height ||
+        character.left + character.width <= wall.left ||
+        character.left >= wall.left + wall.width
+      );
+    });
   };
 
   const checkCollision = () => {
@@ -108,6 +142,13 @@ const Game = ({ projects }) => {
             setHoveredProjectIndex(null);
             setSelectedProjectIndex(null);
           }}
+        ></div>
+      ))}
+      {mazeWalls.map((wall, index) => (
+        <div
+          key={index}
+          className="wall"
+          style={{ top: wall.top, left: wall.left, width: wall.width, height: wall.height }}
         ></div>
       ))}
       {hoveredProjectIndex !== null && (

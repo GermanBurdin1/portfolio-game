@@ -4,7 +4,7 @@ import './App.css';
 
 const projects = [
   [
-    { title: 'Project 1A', description: 'Description of project 1A', url: 'https://github.com/GermanBurdin1/germax-2' },
+    { title: 'Manager de calories', description: 'bases de java', url: 'https://github.com/GermanBurdin1/calories_manager' },
     { title: 'Project 1B', description: 'Description of project 1B', url: '#' },
   ],
   [
