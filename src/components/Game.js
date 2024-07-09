@@ -14,6 +14,7 @@ const Game = ({ projects }) => {
   const [selectedProjectIndex, setSelectedProjectIndex] = useState(null);
   const [karma, setKarma] = useState(() => parseInt(localStorage.getItem('karma')) || 0);
   const [visitedProjects, setVisitedProjects] = useState(() => JSON.parse(localStorage.getItem('visitedProjects')) || []);
+  const [hasAura, setHasAura] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('karma', karma);
@@ -86,6 +87,8 @@ const Game = ({ projects }) => {
               setVisitedProjects([...visitedProjects, projectId]);
               setKarma(karma + 1);
             }
+            setHasAura(true);
+            setTimeout(() => setHasAura(false), 1000); // Убрать ауру через 1 секунду
             window.location.href = projects[hoveredProjectIndex].items[selectedProjectIndex].url;
           }
           break;
@@ -144,7 +147,9 @@ const Game = ({ projects }) => {
   return (
     <div className="game">
       <div className="karma-counter">Karma: {karma}</div>
-      <div className="character" style={characterPosition}></div>
+      <div className={`character ${hasAura ? 'aura' : ''}`} style={characterPosition}>
+        <i className="fas fa-walking"></i>
+      </div>
       {coinPositions.map((coin, index) => (
         <div
           key={index}
