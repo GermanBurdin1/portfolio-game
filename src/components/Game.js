@@ -59,12 +59,12 @@ const Game = ({ projects }) => {
       switch (event.key) {
         case 'ArrowUp':
           setSelectedProjectIndex((prevIndex) =>
-            prevIndex > 0 ? prevIndex - 1 : projects[hoveredProjectIndex].length - 1
+            prevIndex > 0 ? prevIndex - 1 : projects[hoveredProjectIndex].items.length - 1
           );
           break;
         case 'ArrowDown':
           setSelectedProjectIndex((prevIndex) =>
-            prevIndex < projects[hoveredProjectIndex].length - 1 ? prevIndex + 1 : 0
+            prevIndex < projects[hoveredProjectIndex].items.length - 1 ? prevIndex + 1 : 0
           );
           break;
         case 'ArrowLeft':
@@ -74,7 +74,7 @@ const Game = ({ projects }) => {
           break;
         case 'Enter':
           if (selectedProjectIndex !== null) {
-            window.location.href = projects[hoveredProjectIndex][selectedProjectIndex].url;
+            window.location.href = projects[hoveredProjectIndex].items[selectedProjectIndex].url;
           }
           break;
         default:
@@ -164,7 +164,8 @@ const Game = ({ projects }) => {
             setSelectedProjectIndex(null);
           }}
         >
-          {projects[hoveredProjectIndex].map((project, idx) => (
+          <h3>{projects[hoveredProjectIndex].category}</h3>
+          {projects[hoveredProjectIndex].items.map((project, idx) => (
             <div
               key={idx}
               className={`project ${selectedProjectIndex === idx ? 'selected' : ''}`}
