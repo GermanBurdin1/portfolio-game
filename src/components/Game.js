@@ -12,6 +12,13 @@ const Game = ({ projects }) => {
   ]);
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState(null);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState(null);
+  const [karma, setKarma] = useState(() => parseInt(localStorage.getItem('karma')) || 0);
+  const [visitedProjects, setVisitedProjects] = useState(() => JSON.parse(localStorage.getItem('visitedProjects')) || []);
+
+  useEffect(() => {
+    localStorage.setItem('karma', karma);
+    localStorage.setItem('visitedProjects', JSON.stringify(visitedProjects));
+  }, [karma, visitedProjects]);
 
   const mazeWalls = [
     { top: 50, left: 0, width: 600, height: 10 },
@@ -74,6 +81,11 @@ const Game = ({ projects }) => {
           break;
         case 'Enter':
           if (selectedProjectIndex !== null) {
+            const projectId = `${hoveredProjectIndex}-${selectedProjectIndex}`;
+            if (!visitedProjects.includes(projectId)) {
+              setVisitedProjects([...visitedProjects, projectId]);
+              setKarma(karma + 1);
+            }
             window.location.href = projects[hoveredProjectIndex].items[selectedProjectIndex].url;
           }
           break;
@@ -123,7 +135,7 @@ const Game = ({ projects }) => {
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [characterPosition, hoveredProjectIndex, selectedProjectIndex]);
+  }, [characterPosition, hoveredProjectIndex, selectedProjectIndex, karma, visitedProjects]);
 
   useEffect(() => {
     checkCollision();
@@ -131,6 +143,7 @@ const Game = ({ projects }) => {
 
   return (
     <div className="game">
+      <div className="karma-counter">Karma: {karma}</div>
       <div className="character" style={characterPosition}></div>
       {coinPositions.map((coin, index) => (
         <div
