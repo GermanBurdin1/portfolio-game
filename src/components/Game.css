@@ -45,9 +45,9 @@
   justify-content: center;
   border: 1px solid black;
   padding: 10px;
-  max-height: 300px; /* Добавлено ограничение по высоте */
-  overflow-y: auto;  /* Добавлена прокрутка внутри списка */
-  box-sizing: border-box; /* Учитывать padding в общей высоте и ширине */
+  max-height: 300px; 
+  overflow-y: auto;  
+  box-sizing: border-box; 
 }
 
 .project {
