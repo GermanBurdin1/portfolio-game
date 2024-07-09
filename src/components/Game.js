@@ -48,6 +48,8 @@ const Game = ({ projects }) => {
         characterRect.right > coinRect.left
       ) {
         setHoveredProjectIndex(index);
+      } else if (hoveredProjectIndex === index) {
+        setHoveredProjectIndex(null);
       }
     });
   };
