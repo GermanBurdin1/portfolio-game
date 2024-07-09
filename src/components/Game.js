@@ -127,6 +127,7 @@ const Game = ({ projects }) => {
             <div
               key={idx}
               className={`project ${selectedProjectIndex === idx ? 'selected' : ''}`}
+              onClick={() => window.location.href = project.url}
             >
               <h3>{project.title}</h3>
               <p>{project.description}</p>
