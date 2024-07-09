@@ -15,9 +15,8 @@
   justify-content: center;
   font-size: 24px;
   color: blue;
-  animation: walk-animation 1s steps(4) infinite;
   border-radius: 50%;
-  transition: top 0.2s, left 0.2s; /* Более плавное перемещение */
+  transition: top 0.5s ease-in-out, left 0.5s ease-in-out; /* Плавное перемещение */
 }
 
 .character.aura {
@@ -70,12 +69,4 @@
   background-color: white;
   padding: 5px;
   border: 1px solid black;
-}
-
-@keyframes walk-animation {
-  0% { content: '\f554'; } 
-  25% { content: '\f555'; } 
-  50% { content: '\f554'; } 
-  75% { content: '\f555'; } 
-  100% { content: '\f554'; } 
 }
