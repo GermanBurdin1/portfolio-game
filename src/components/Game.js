@@ -11,24 +11,53 @@ const Game = ({ projects }) => {
     { top: 500, left: 500 },
   ]);
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState(null);
+  const [selectedProjectIndex, setSelectedProjectIndex] = useState(null);
 
   const handleKeyPress = (event) => {
     const { top, left } = characterPosition;
-    switch (event.key) {
-      case 'ArrowUp':
-        setCharacterPosition({ top: Math.max(top - 10, 0), left });
-        break;
-      case 'ArrowDown':
-        setCharacterPosition({ top: Math.min(top + 10, 590), left });
-        break;
-      case 'ArrowLeft':
-        setCharacterPosition({ top, left: Math.max(left - 10, 0) });
-        break;
-      case 'ArrowRight':
-        setCharacterPosition({ top, left: Math.min(left + 10, 590) });
-        break;
-      default:
-        break;
+
+    if (hoveredProjectIndex === null) {
+      switch (event.key) {
+        case 'ArrowUp':
+          setCharacterPosition({ top: Math.max(top - 10, 0), left });
+          break;
+        case 'ArrowDown':
+          setCharacterPosition({ top: Math.min(top + 10, 590), left });
+          break;
+        case 'ArrowLeft':
+          setCharacterPosition({ top, left: Math.max(left - 10, 0) });
+          break;
+        case 'ArrowRight':
+          setCharacterPosition({ top, left: Math.min(left + 10, 590) });
+          break;
+        default:
+          break;
+      }
+    } else {
+      switch (event.key) {
+        case 'ArrowUp':
+          setSelectedProjectIndex((prevIndex) =>
+            prevIndex > 0 ? prevIndex - 1 : projects[hoveredProjectIndex].length - 1
+          );
+          break;
+        case 'ArrowDown':
+          setSelectedProjectIndex((prevIndex) =>
+            prevIndex < projects[hoveredProjectIndex].length - 1 ? prevIndex + 1 : 0
+          );
+          break;
+        case 'ArrowLeft':
+        case 'ArrowRight':
+          setHoveredProjectIndex(null);
+          setSelectedProjectIndex(null);
+          break;
+        case 'Enter':
+          if (selectedProjectIndex !== null) {
+            window.location.href = projects[hoveredProjectIndex][selectedProjectIndex].url;
+          }
+          break;
+        default:
+          break;
+      }
     }
   };
 
@@ -50,6 +79,7 @@ const Game = ({ projects }) => {
         setHoveredProjectIndex(index);
       } else if (hoveredProjectIndex === index) {
         setHoveredProjectIndex(null);
+        setSelectedProjectIndex(null);
       }
     });
   };
@@ -59,7 +89,7 @@ const Game = ({ projects }) => {
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
-  }, [characterPosition]);
+  }, [characterPosition, hoveredProjectIndex, selectedProjectIndex]);
 
   useEffect(() => {
     checkCollision();
@@ -74,16 +104,33 @@ const Game = ({ projects }) => {
           className={`coin coin-${index}`}
           style={coin}
           onMouseEnter={() => setHoveredProjectIndex(index)}
-          onMouseLeave={() => setHoveredProjectIndex(null)}
+          onMouseLeave={() => {
+            setHoveredProjectIndex(null);
+            setSelectedProjectIndex(null);
+          }}
         ></div>
       ))}
       {hoveredProjectIndex !== null && (
-        <div className="projects-list">
+        <div
+          className="projects-list"
+          style={{
+            top: coinPositions[hoveredProjectIndex].top + 20,
+            left: coinPositions[hoveredProjectIndex].left + 20,
+          }}
+          onMouseEnter={() => setHoveredProjectIndex(hoveredProjectIndex)}
+          onMouseLeave={() => {
+            setHoveredProjectIndex(null);
+            setSelectedProjectIndex(null);
+          }}
+        >
           {projects[hoveredProjectIndex].map((project, idx) => (
-            <div key={idx} className="project">
+            <div
+              key={idx}
+              className={`project ${selectedProjectIndex === idx ? 'selected' : ''}`}
+            >
               <h3>{project.title}</h3>
               <p>{project.description}</p>
-              <a href={project.url}>Learn More</a>
+              <a href={project.url}>{project.url}</a>
             </div>
           ))}
         </div>
