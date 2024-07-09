@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Character from './Character';
 import Coin from './Coin';
-import Project from './Project';
+import ProjectList from './ProjectList';
 import './Game.css';
 
 const Game = ({ projects }) => {
   const [characterPosition, setCharacterPosition] = useState({ x: 50, y: 50 });
   const [coins, setCoins] = useState(generateCoins(projects.length));
-  const [collectedCoins, setCollectedCoins] = useState([]);
+  const [hoveredProjectIndex, setHoveredProjectIndex] = useState(null);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -18,31 +18,28 @@ const Game = ({ projects }) => {
       if (e.key === 'ArrowRight') x += 10;
 
       setCharacterPosition({ x, y });
-
-      coins.forEach((coin, index) => {
-        if (Math.abs(x - coin.x) < 20 && Math.abs(y - coin.y) < 20) {
-          setCollectedCoins((prev) => [...prev, index]);
-        }
-      });
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [characterPosition, coins]);
+  }, [characterPosition]);
 
   return (
     <div className="game">
       <Character x={characterPosition.x} y={characterPosition.y} />
-      {coins.map((coin, index) =>
-        collectedCoins.includes(index) ? null : (
-          <Coin key={index} x={coin.x} y={coin.y} />
-        )
-      )}
-      <div className="projects">
-        {collectedCoins.map((index) => (
-          <Project key={index} project={projects[index]} />
-        ))}
-      </div>
+      {coins.map((coin, index) => (
+        <div
+          key={index}
+          className="coin-container"
+          onMouseEnter={() => setHoveredProjectIndex(index)}
+          onMouseLeave={() => setHoveredProjectIndex(null)}
+        >
+          <Coin x={coin.x} y={coin.y} />
+          {hoveredProjectIndex === index && (
+            <ProjectList projects={projects[index]} />
+          )}
+        </div>
+      ))}
     </div>
   );
 };

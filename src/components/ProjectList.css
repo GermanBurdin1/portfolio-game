@@ -1,0 +1,12 @@
+.project-list {
+  position: absolute;
+  top: 30px; /* чтобы немного отступить от монетки */
+  background-color: white;
+  border: 1px solid black;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.project-item {
+  margin: 10px 0;
+}

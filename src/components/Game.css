@@ -6,6 +6,6 @@
   margin: 20px auto;
 }
 
-.projects {
-  margin-top: 20px;
+.coin-container {
+  position: absolute;
 }
